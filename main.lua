@@ -1,18 +1,39 @@
+-- Carregando a biblioteca Fluent
+print("Carregando Fluent...")
 local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/InterfaceManager.lua"))()
+if not Fluent then
+    error("Falha ao carregar Fluent.")
+end
+print("Fluent carregado.")
 
+-- Carregando o SaveManager
+print("Carregando SaveManager...")
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/SaveManager.lua"))()
+if not SaveManager then
+    error("Falha ao carregar SaveManager.")
+end
+print("SaveManager carregado.")
+
+-- Carregando o InterfaceManager
+print("Carregando InterfaceManager...")
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/InterfaceManager.lua"))()
+if not InterfaceManager then
+    error("Falha ao carregar InterfaceManager.")
+end
+print("InterfaceManager carregado.")
+
+-- Criando a janela da interface
 local Window = Fluent:CreateWindow({
     Title = "Fluent " .. Fluent.Version,
     SubTitle = "by dawid",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true, -- O desfoque pode ser detectável, desativar se necessário
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl -- Usado quando não há tecla de minimizar
 })
 
---Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
+-- Adicionando abas
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
@@ -20,206 +41,184 @@ local Tabs = {
 
 local Options = Fluent.Options
 
-do
-    Fluent:Notify({
-        Title = "Notification",
-        Content = "This is a notification",
-        SubContent = "SubContent", -- Optional
-        Duration = 5 -- Set to nil to make the notification not disappear
-    })
+-- Notificação inicial
+Fluent:Notify({
+    Title = "Notificação",
+    Content = "Esta é uma notificação",
+    SubContent = "SubConteúdo", -- Opcional
+    Duration = 5 -- Defina como nil para não fazer a notificação desaparecer
+})
 
-    Tabs.Main:AddParagraph({
-        Title = "Paragraph",
-        Content = "This is a paragraph.\nSecond line!"
-    })
+-- Adicionando elementos na aba Principal
+Tabs.Main:AddParagraph({
+    Title = "Parágrafo",
+    Content = "Este é um parágrafo.\nSegunda linha!"
+})
 
-    Tabs.Main:AddButton({
-        Title = "Button",
-        Description = "Very important button",
-        Callback = function()
-            Window:Dialog({
-                Title = "Title",
-                Content = "This is a dialog",
-                Buttons = {
-                    {
-                        Title = "Confirm",
-                        Callback = function()
-                            print("Confirmed the dialog.")
-                        end
-                    },
-                    {
-                        Title = "Cancel",
-                        Callback = function()
-                            print("Cancelled the dialog.")
-                        end
-                    }
+Tabs.Main:AddButton({
+    Title = "Botão",
+    Description = "Botão muito importante",
+    Callback = function()
+        Window:Dialog({
+            Title = "Título",
+            Content = "Este é um diálogo",
+            Buttons = {
+                {
+                    Title = "Confirmar",
+                    Callback = function()
+                        print("Diálogo confirmado.")
+                    end
+                },
+                {
+                    Title = "Cancelar",
+                    Callback = function()
+                        print("Diálogo cancelado.")
+                    end
                 }
-            })
+            }
+        })
+    end
+})
+
+local Toggle = Tabs.Main:AddToggle("MyToggle", { Title = "Alternar", Default = false })
+
+Toggle:OnChanged(function()
+    print("Alternar alterado:", Options.MyToggle.Value)
+end)
+
+Options.MyToggle:SetValue(false)
+
+local Slider = Tabs.Main:AddSlider("Slider", {
+    Title = "Deslizante",
+    Description = "Este é um deslizante",
+    Default = 2,
+    Min = 0,
+    Max = 5,
+    Rounding = 1,
+    Callback = function(Value)
+        print("Deslizante alterado:", Value)
+    end
+})
+
+Slider:OnChanged(function(Value)
+    print("Deslizante mudou:", Value)
+end)
+
+Slider:SetValue(3)
+
+local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
+    Title = "Dropdown",
+    Values = {"um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze"},
+    Multi = false,
+    Default = 1,
+})
+
+Dropdown:SetValue("quatro")
+
+Dropdown:OnChanged(function(Value)
+    print("Dropdown alterado:", Value)
+end)
+
+local MultiDropdown = Tabs.Main:AddDropdown("MultiDropdown", {
+    Title = "Dropdown Múltiplo",
+    Description = "Você pode selecionar múltiplos valores.",
+    Values = {"um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze"},
+    Multi = true,
+    Default = {"sete", "doze"},
+})
+
+MultiDropdown:SetValue({
+    três = true,
+    cinco = true,
+    sete = false
+})
+
+MultiDropdown:OnChanged(function(Value)
+    local Values = {}
+    for Value, State in next, Value do
+        table.insert(Values, Value)
+    end
+    print("Dropdown múltiplo alterado:", table.concat(Values, ", "))
+end)
+
+local Colorpicker = Tabs.Main:AddColorpicker("Colorpicker", {
+    Title = "Selecionador de Cores",
+    Default = Color3.fromRGB(96, 205, 255)
+})
+
+Colorpicker:OnChanged(function()
+    print("Selecionador de cores alterado:", Colorpicker.Value)
+end)
+
+Colorpicker:SetValueRGB(Color3.fromRGB(0, 255, 140))
+
+local TColorpicker = Tabs.Main:AddColorpicker("TColorpicker", {
+    Title = "Selecionador de Cores com Transparência",
+    Description = "mas você pode alterar a transparência.",
+    Transparency = 0,
+    Default = Color3.fromRGB(96, 205, 255)
+})
+
+TColorpicker:OnChanged(function()
+    print("TColorpicker alterado:", TColorpicker.Value, "Transparência:", TColorpicker.Transparency)
+end)
+
+local Keybind = Tabs.Main:AddKeybind("Keybind", {
+    Title = "Tecla de Atalho",
+    Mode = "Toggle", -- Sempre, Alternar, Segurar
+    Default = "LeftControl", -- String como o nome do atalho (MB1, MB2 para botões do mouse)
+
+    Callback = function(Value)
+        print("Tecla de atalho clicada!", Value)
+    end,
+
+    ChangedCallback = function(New)
+        print("Tecla de atalho alterada!", New)
+    end
+})
+
+Keybind:OnClick(function()
+    print("Tecla de atalho clicada:", Keybind:GetState())
+end)
+
+Keybind:OnChanged(function()
+    print("Tecla de atalho alterada:", Keybind.Value)
+end)
+
+-- Loop para verificar se a tecla de atalho está pressionada
+task.spawn(function()
+    while true do
+        wait(1)
+        local state = Keybind:GetState()
+        if state then
+            print("Tecla de atalho está sendo pressionada")
         end
-    })
+        if Fluent.Unloaded then break end
+    end
+end)
 
-    local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Toggle", Default = false })
+Keybind:SetValue("MB2", "Toggle") -- Define atalho para MB2, modo para Segurar
 
-    Toggle:OnChanged(function()
-        print("Toggle changed:", Options.MyToggle.Value)
-    end)
+local Input = Tabs.Main:AddInput("Input", {
+    Title = "Entrada",
+    Default = "Padrão",
+    Placeholder = "Placeholder",
+    Numeric = false, -- Permite apenas números
+    Finished = false, -- Chama callback apenas quando pressionar enter
+    Callback = function(Value)
+        print("Entrada alterada:", Value)
+    end
+})
 
-    Options.MyToggle:SetValue(false)
+Input:OnChanged(function()
+    print("Entrada atualizada:", Input.Value)
+end)
 
-    local Slider = Tabs.Main:AddSlider("Slider", {
-        Title = "Slider",
-        Description = "This is a slider",
-        Default = 2,
-        Min = 0,
-        Max = 5,
-        Rounding = 1,
-        Callback = function(Value)
-            print("Slider was changed:", Value)
-        end
-    })
-
-    Slider:OnChanged(function(Value)
-        print("Slider changed:", Value)
-    end)
-
-    Slider:SetValue(3)
-
-    local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
-        Title = "Dropdown",
-        Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
-        Multi = false,
-        Default = 1,
-    })
-
-    Dropdown:SetValue("four")
-
-    Dropdown:OnChanged(function(Value)
-        print("Dropdown changed:", Value)
-    end)
-
-    local MultiDropdown = Tabs.Main:AddDropdown("MultiDropdown", {
-        Title = "Dropdown",
-        Description = "You can select multiple values.",
-        Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
-        Multi = true,
-        Default = {"seven", "twelve"},
-    })
-
-    MultiDropdown:SetValue({
-        three = true,
-        five = true,
-        seven = false
-    })
-
-    MultiDropdown:OnChanged(function(Value)
-        local Values = {}
-        for Value, State in next, Value do
-            table.insert(Values, Value)
-        end
-        print("Mutlidropdown changed:", table.concat(Values, ", "))
-    end)
-
-    local Colorpicker = Tabs.Main:AddColorpicker("Colorpicker", {
-        Title = "Colorpicker",
-        Default = Color3.fromRGB(96, 205, 255)
-    })
-
-    Colorpicker:OnChanged(function()
-        print("Colorpicker changed:", Colorpicker.Value)
-    end)
-    
-    Colorpicker:SetValueRGB(Color3.fromRGB(0, 255, 140))
-
-    local TColorpicker = Tabs.Main:AddColorpicker("TransparencyColorpicker", {
-        Title = "Colorpicker",
-        Description = "but you can change the transparency.",
-        Transparency = 0,
-        Default = Color3.fromRGB(96, 205, 255)
-    })
-
-    TColorpicker:OnChanged(function()
-        print(
-            "TColorpicker changed:", TColorpicker.Value,
-            "Transparency:", TColorpicker.Transparency
-        )
-    end)
-
-    local Keybind = Tabs.Main:AddKeybind("Keybind", {
-        Title = "KeyBind",
-        Mode = "Toggle", -- Always, Toggle, Hold
-        Default = "LeftControl", -- String as the name of the keybind (MB1, MB2 for mouse buttons)
-
-        -- Occurs when the keybind is clicked, Value is `true`/`false`
-        Callback = function(Value)
-            print("Keybind clicked!", Value)
-        end,
-
-        -- Occurs when the keybind itself is changed, `New` is a KeyCode Enum OR a UserInputType Enum
-        ChangedCallback = function(New)
-            print("Keybind changed!", New)
-        end
-    })
-
-    -- OnClick is only fired when you press the keybind and the mode is Toggle
-    -- Otherwise, you will have to use Keybind:GetState()
-    Keybind:OnClick(function()
-        print("Keybind clicked:", Keybind:GetState())
-    end)
-
-    Keybind:OnChanged(function()
-        print("Keybind changed:", Keybind.Value)
-    end)
-
-    task.spawn(function()
-        while true do
-            wait(1)
-
-            -- example for checking if a keybind is being pressed
-            local state = Keybind:GetState()
-            if state then
-                print("Keybind is being held down")
-            end
-
-            if Fluent.Unloaded then break end
-        end
-    end)
-
-    Keybind:SetValue("MB2", "Toggle") -- Sets keybind to MB2, mode to Hold
-
-    local Input = Tabs.Main:AddInput("Input", {
-        Title = "Input",
-        Default = "Default",
-        Placeholder = "Placeholder",
-        Numeric = false, -- Only allows numbers
-        Finished = false, -- Only calls callback when you press enter
-        Callback = function(Value)
-            print("Input changed:", Value)
-        end
-    })
-
-    Input:OnChanged(function()
-        print("Input updated:", Input.Value)
-    end)
-end
-
--- Addons:
--- SaveManager (Allows you to have a configuration system)
--- InterfaceManager (Allows you to have a interface managment system)
-
--- Hand the library over to our managers
+-- Configuração dos Addons
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
-
--- Ignore keys that are used by ThemeManager.
--- (we dont want configs to save themes, do we?)
 SaveManager:IgnoreThemeSettings()
-
--- You can add indexes of elements the save manager should ignore
 SaveManager:SetIgnoreIndexes({})
-
--- use case for doing it this way:
--- a script hub could have themes in a global folder
--- and game configs in a separate folder per game
 InterfaceManager:SetFolder("FluentScriptHub")
 SaveManager:SetFolder("FluentScriptHub/specific-game")
 
@@ -230,10 +229,9 @@ Window:SelectTab(1)
 
 Fluent:Notify({
     Title = "Fluent",
-    Content = "The script has been loaded.",
+    Content = "O script foi carregado.",
     Duration = 8
 })
 
--- You can use the SaveManager:LoadAutoloadConfig() to load a config
--- which has been marked to be one that auto loads!
+-- Carregar configurações automaticamente
 SaveManager:LoadAutoloadConfig()
