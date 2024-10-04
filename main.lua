@@ -1,23 +1,23 @@
 -- Carregando a biblioteca Fluent
 print("Carregando Fluent...")
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/main.lua"))()
-if not Fluent then
+local success, Fluent = pcall(loadstring, game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/main.lua"))
+if not success or not Fluent then
     error("Falha ao carregar Fluent.")
 end
 print("Fluent carregado.")
 
 -- Carregando o SaveManager
 print("Carregando SaveManager...")
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/Addons/SaveManager.lua"))()
-if not SaveManager then
+success, SaveManager = pcall(loadstring, game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/Addons/SaveManager.lua"))
+if not success or not SaveManager then
     error("Falha ao carregar SaveManager.")
 end
 print("SaveManager carregado.")
 
 -- Carregando o InterfaceManager
 print("Carregando InterfaceManager...")
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/Addons/InterfaceManager.lua"))()
-if not InterfaceManager then
+success, InterfaceManager = pcall(loadstring, game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/Addons/InterfaceManager.lua"))
+if not success or not InterfaceManager then
     error("Falha ao carregar InterfaceManager.")
 end
 print("InterfaceManager carregado.")
@@ -135,10 +135,8 @@ MultiDropdown:SetValue({
 
 MultiDropdown:OnChanged(function(Value)
     local Values = {}
-    for ValueName, State in pairs(Value) do
-        if State then
-            table.insert(Values, ValueName)
-        end
+    for Value, State in next, Value do
+        table.insert(Values, Value)
     end
     print("Dropdown múltiplo alterado:", table.concat(Values, ", "))
 end)
@@ -193,7 +191,7 @@ task.spawn(function()
         wait(1)
         local state = Keybind:GetState()
         if state then
-            print("Tecla de atalho está sendo pressionada")
+            print("Tecla de atalho está sendo pressionida")
         end
         if Fluent.Unloaded then break end
     end
