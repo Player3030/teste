@@ -8,7 +8,7 @@ print("Fluent carregado.")
 
 -- Carregando o SaveManager
 print("Carregando SaveManager...")
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/SaveManager.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/Addons/SaveManager.lua"))()
 if not SaveManager then
     error("Falha ao carregar SaveManager.")
 end
