@@ -1,6 +1,6 @@
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/InterfaceManager.lua"))()
+local Fluent = loadstring(game:HttpGet("https://github.com/Player3030/teste/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
     Title = "Fluent " .. Fluent.Version,
@@ -9,10 +9,10 @@ local Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when there's no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 })
 
--- Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
+--Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
@@ -58,7 +58,7 @@ do
         end
     })
 
-    local Toggle = Tabs.Main:AddToggle("MyToggle", { Title = "Toggle", Default = false })
+    local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Toggle", Default = false })
 
     Toggle:OnChanged(function()
         print("Toggle changed:", Options.MyToggle.Value)
@@ -116,7 +116,7 @@ do
         for Value, State in next, Value do
             table.insert(Values, Value)
         end
-        print("Multidropdown changed:", table.concat(Values, ", "))
+        print("Mutlidropdown changed:", table.concat(Values, ", "))
     end)
 
     local Colorpicker = Tabs.Main:AddColorpicker("Colorpicker", {
@@ -127,7 +127,7 @@ do
     Colorpicker:OnChanged(function()
         print("Colorpicker changed:", Colorpicker.Value)
     end)
-
+    
     Colorpicker:SetValueRGB(Color3.fromRGB(0, 255, 140))
 
     local TColorpicker = Tabs.Main:AddColorpicker("TransparencyColorpicker", {
@@ -211,7 +211,7 @@ SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 
 -- Ignore keys that are used by ThemeManager.
--- (we don't want configs to save themes, do we?)
+-- (we dont want configs to save themes, do we?)
 SaveManager:IgnoreThemeSettings()
 
 -- You can add indexes of elements the save manager should ignore
