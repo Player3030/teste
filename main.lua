@@ -16,7 +16,7 @@ print("SaveManager carregado.")
 
 -- Carregando o InterfaceManager
 print("Carregando InterfaceManager...")
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/main/Addons/InterfaceManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Player3030/teste/refs/heads/main/Addons/InterfaceManager.lua"))()
 if not InterfaceManager then
     error("Falha ao carregar InterfaceManager.")
 end
