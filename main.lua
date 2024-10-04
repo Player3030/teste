@@ -135,8 +135,10 @@ MultiDropdown:SetValue({
 
 MultiDropdown:OnChanged(function(Value)
     local Values = {}
-    for Value, State in next, Value do
-        table.insert(Values, Value)
+    for ValueName, State in pairs(Value) do
+        if State then
+            table.insert(Values, ValueName)
+        end
     end
     print("Dropdown múltiplo alterado:", table.concat(Values, ", "))
 end)
